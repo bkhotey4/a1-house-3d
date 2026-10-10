@@ -847,8 +847,28 @@ CB(.32,Y[5]+.9,.25,stoneM,-.16,0,-.2); CB(.32,Y[5]+.9,.25,stoneM,W-.16,0,-.2);
 const whiteM=new THREE.MeshStandardMaterial({color:0xEDEBE6,roughness:.8});
 CB(W-.16,.35,.25,whiteM,.16,Y[3]-.35,-.18); CB(W-.16,.35,.25,whiteM,.16,Y[4]-.35,-.18); CB(W-.16,.5,.25,whiteM,.16,Y[5]-.2,-.18);
 CB(W-.16,.9,.06,new THREE.MeshStandardMaterial({color:0x7A7672,roughness:.85}),.16,Y[2]-.95,-.2);
-// 冷氣室外機
-for(const [f,x] of [[3,.35],[4,.35],[2,.35]]){CB(.8,.55,.3,new THREE.MeshStandardMaterial({color:0xE8E6E2,roughness:.6}),x,Y[f]+1.6,-.35);}
+// 冷氣室外機（前側陽台＋後側外牆，依現況）
+function acUnit(x,y,face){ // 分離式冷氣室外機：face 'front' 掛前側、'rear' 掛後牆外
+  const body=new THREE.MeshStandardMaterial({color:0xEDEBE7,roughness:.5}), dark=new THREE.MeshStandardMaterial({color:0x2C2C2C,roughness:.7}),
+        ring=new THREE.MeshStandardMaterial({color:0xBDBAB4,roughness:.4,metalness:.3}), br=new THREE.MeshStandardMaterial({color:0x5E5B57,roughness:.5,metalness:.5}),
+        pipe=new THREE.MeshStandardMaterial({color:0xF2F0EC,roughness:.7});
+  const u=new THREE.Group(), L=(w,h,d,m,cx,cy,cz)=>{const me=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);me.position.set(cx,cy,cz);u.add(me);return me;};
+  L(.82,.58,.28,body,0,0,0);                                   // 機體
+  const fan=new THREE.Mesh(new THREE.CircleGeometry(.205,40),dark);fan.position.set(-.12,0,.141);u.add(fan); // 風扇口
+  for(const r of[.205,.15,.095]){const t=new THREE.Mesh(new THREE.TorusGeometry(r,.007,6,40),ring);t.position.set(-.12,0,.145);u.add(t);} // 護網圓圈
+  L(.41,.012,.01,ring,-.12,0,.146); L(.012,.41,.01,ring,-.12,0,.146);  // 護網十字
+  for(let k=0;k<6;k++)L(.16,.012,.01,dark,.26,-.17+k*.068,.142);      // 右側散熱格柵
+  L(.06,.025,.005,new THREE.MeshStandardMaterial({color:0x2F5D9E}),.29,.24,.143); // 銘牌
+  for(const sx of[-.3,.3]){L(.04,.04,.42,br,sx,-.31,-.07);const brace=L(.03,.03,.4,br,sx,-.45,-.2);brace.rotation.x=.75;} // 壁掛支架
+  const pp=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.32,12),pipe);pp.rotation.z=Math.PI/2;pp.position.set(.5,-.12,-.05);u.add(pp);
+  const pp2=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.3,12),pipe);pp2.rotation.x=Math.PI/2;pp2.position.set(.64,-.12,-.2);u.add(pp2);
+  const zc=face==='rear'?REAR+.27:-.27;
+  u.position.set(x+.41,y+.29,-zc); u.rotation.y=face==='rear'?Math.PI:0;
+  u.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}}); TG.add(u);
+}
+for(const f of[2,3,4])acUnit(.35,Y[f]+1.6,'front');
+acUnit(.35,Y[2]+1.25,'rear'); acUnit(1.0,Y[3]+.08,'rear');
+
 // 1F 側窗灰色格柵
 for(const z0 of[2.3,7.3]){const L=z0<5?1.0:.65;for(let i=0;i<5;i++)CB(.04,1.3,.03,new THREE.MeshStandardMaterial({color:0x6E6B67}),W+.13,1.1,z0+i*L/4);for(let j=0;j<6;j++)CB(.04,.03,L,new THREE.MeshStandardMaterial({color:0x6E6B67}),W+.13,1.1+j*.26,z0);}
 // 頂樓鐵皮屋頂
@@ -900,6 +920,7 @@ function showFloor(f,{inside=false}={}){
 }
 const VIEWS=[
   {n:'外觀',f:'all',p:[5.2,6.5,12.5],t:[2.2,7.6,-2.5],fov:55},
+  {n:'後側外觀',f:'all',p:[8.5,12.5,-19.5],t:[2.2,8.2,-9.0],fov:45},
   {n:'1F 剖切',f:1,p:[2.6,12.5,6.2],t:[2.3,0.0,-4.6]},
   {n:'車庫玄關',f:1,in:1,p:[3.2,1.75,4.6],t:[1.7,1.25,-4.2],fov:52},
   {n:'孝親房',f:1,in:1,p:[3.15,1.7,-7.5],t:[.5,.85,-9.2],fov:66},
