@@ -65,6 +65,7 @@ h1{margin:4px 0 0;font:700 24px/1.25 var(--display);text-wrap:balance}
 .brand{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;padding:1px 6px;border-radius:4px;margin-right:6px;vertical-align:1px}
 .b-ikea{background:#0058A3;color:#FFDB00}
 .b-tr{background:#C8102E;color:#fff}
+.b-gen{background:#4A4844;color:#fff}
 .swatches{display:flex;flex-wrap:wrap;gap:8px}
 .sw{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;font-size:11px;color:var(--muted);width:56px}
 .sw i{display:block;width:40px;height:40px;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
@@ -442,10 +443,15 @@ const CAT={
     {id:'kallax',brand:'IKEA',name:'KALLAX 層架 2×4',w:77,d:39,h:147,q:'KALLAX 層架',colors:[C('白色','#EDEBE6','mono'),C('白橡木紋','#CDB89A','green'),C('黑褐色','#2E2A26','mono')]},
     {id:'tr-book',brand:'特力屋',name:'系統書櫃 160',w:160,d:35,h:200,q:'書櫃',colors:[C('淺木紋','#C8AE8A','green'),C('胡桃木紋','#5E412D','warm')]},
   ],
+  tvsmall:[
+    {id:'tv32',brand:'家電',name:'32 吋液晶電視',w:73,d:6,h:43,q:'32吋 電視',colors:[C('黑色邊框','#111111','mono')]},
+    {id:'tv43',brand:'家電',name:'43 吋液晶電視',w:97,d:6,h:57,q:'43吋 電視',colors:[C('黑色邊框','#111111','mono')]},
+    {id:'tv50',brand:'家電',name:'50 吋液晶電視',w:112,d:6,h:65,q:'50吋 電視',colors:[C('黑色邊框','#111111','mono')]},
+  ],
   vanity:[
+    {id:'tr-vanity',brand:'特力屋',name:'化妝台（附鏡）',w:80,d:40,h:76,q:'化妝台 附鏡',colors:[C('奶茶色','#C9B59C','warm'),C('胡桃木色','#5A3F2C','warm'),C('白色','#EDEBE6','mono')]},
     {id:'malmV',brand:'IKEA',name:'MALM 化妝台',w:120,d:41,h:78,q:'MALM 化妝台',colors:[C('白色','#EDEBE6','mono'),C('白橡木紋','#CDB89A','green'),C('黑褐色','#2E2A26','mono')]},
     {id:'hemnesV',brand:'IKEA',name:'HEMNES 化妝台',w:100,d:50,h:75,q:'HEMNES 化妝台',colors:[C('白色','#EDEBE6','mono'),C('黑褐色','#2E2A26','mono')]},
-    {id:'tr-vanity',brand:'特力屋',name:'化妝台（附鏡）',w:80,d:40,h:76,q:'化妝台 附鏡',colors:[C('奶茶色','#C9B59C','warm'),C('胡桃木色','#5A3F2C','warm'),C('白色','#EDEBE6','mono')]},
   ],
   outdoor:[
     {id:'applaro',brand:'IKEA',name:'ÄPPLARÖ 戶外桌椅組',w:140,d:78,h:72,q:'ÄPPLARÖ 戶外',colors:[C('褐色染色','#7A5A40','warm'),C('灰褐色','#6F6A63','mono')]},
@@ -486,7 +492,8 @@ const SLOTS=[
   {id:'f3-rug',f:3,room:'3F 臥室 A',label:'地毯',cat:'rug',x:2.6,z:2.05,face:'+x',small:true},
   {id:'f3-curtain',f:3,room:'3F 臥室 A',label:'窗簾',cat:'curtain',win:{axis:'z',c:FZ+.08,a:1.7,e:4.3,sideFace:'rear'}},
   {id:'f3-art',f:3,room:'3F 臥室 A',label:'床頭掛畫',cat:'art',wallArt:{axis:'x',c:W-.09,s:2.05,y:1.65,face:'-x'}},
-  {id:'f3-vanity',f:3,room:'3F 臥室 A',label:'化妝台',cat:'vanity',z:1.65,face:'+x',back:{x:1.53},avail:1.95,availD:.45,tip:'化妝台靠浴室牆、面向窗戶，白天自然光化妝最準；床尾到化妝台約留 50 cm，建議選深度 45 cm 以內。'},
+  {id:'f3-vanity',f:3,room:'3F 臥室 A',label:'化妝台',cat:'vanity',z:1.36,face:'+x',back:{x:1.53},avail:.82,availD:.45,tip:'化妝台靠浴室牆、靠窗那一側，白天自然光化妝最準；旁邊留給小電視，所以寬度建議 80 cm 左右，深度 45 cm 以內。'},
+  {id:'f3-tv',f:3,room:'3F 臥室 A',label:'小電視',cat:'tvsmall',z:2.32,face:'+x',back:{x:1.53},avail:.98,tip:'壁掛在床尾正對面的浴室牆上，畫面中心離地約 125 cm，躺在床上看剛好；床到電視約 2.4 米，32–43 吋最合適。牆內記得預留插座與天線／網路線。'},
   {id:'f3-bedB',f:3,room:'3F 臥室 B',label:'床',cat:'bed',z:8.35,face:'+x',back:{x:.08},avail:2.75},
   {id:'f3-deskB',f:3,room:'3F 臥室 B',label:'書桌',cat:'desk',x:2.05,face:'rear',back:{z:9.8},avail:1.4},
   {id:'f3-wardB',f:3,room:'3F 臥室 B',label:'衣櫃',cat:'wardrobeS',x:2.0,face:'rear',back:{z:7.32},avail:1.45},
@@ -510,13 +517,14 @@ const SLOT=Object.fromEntries(SLOTS.map(s=>[s.id,s]));
 const hexm=(h,o)=>mat(new THREE.Color(h),o);
 function LB(g,w,h,d,m,cx,y,cz){const me=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);me.position.set(cx,y+h/2,cz);g.add(me);return me;}
 function LC(g,r,h,m,cx,y,cz,seg=20,r2){const me=new THREE.Mesh(new THREE.CylinderGeometry(r,r2??r,h,seg),m);me.position.set(cx,y+h/2,cz);g.add(me);return me;}
-const ART_CACHE={};
+const ART_CACHE={}; let SMALLTV=null;
 function artTex(kind){if(ART_CACHE[kind])return ART_CACHE[kind];const t=ctex(472,312,(g,w,h)=>{const r=rng(kind==='暖色抽象'?3:kind==='黑白線條'?8:15);
   if(kind==='暖色抽象'){g.fillStyle='#EFE6D8';g.fillRect(0,0,w,h);[['#C98F5E',.3,.55,120],['#8C5E36',.62,.42,90],['#E3BC8A',.5,.72,70]].forEach(([c,x,y,rad])=>{g.fillStyle=c;g.beginPath();g.arc(x*w,y*h,rad,0,Math.PI*2);g.fill();});g.fillStyle='#2E2A26';g.fillRect(w*.12,h*.18,w*.76,4);}
   else if(kind==='黑白線條'){g.fillStyle='#F2F0EB';g.fillRect(0,0,w,h);g.strokeStyle='#2A2A28';g.lineWidth=3;for(let i=0;i<5;i++){g.beginPath();g.moveTo(0,h*(.3+i*.1));for(let x=0;x<=w;x+=20)g.lineTo(x,h*(.3+i*.1)+Math.sin(x/60+i)*18);g.stroke();}}
   else{const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#DCE3DA');gr.addColorStop(1,'#F1EEE6');g.fillStyle=gr;g.fillRect(0,0,w,h);[['#9DB095',.55],['#6E8A6A',.68],['#4F6B45',.82]].forEach(([c,base])=>{g.fillStyle=c;g.beginPath();g.moveTo(0,h);for(let x=0;x<=w;x+=24)g.lineTo(x,h*base-Math.abs(Math.sin(x/90+base*9))*h*.25*r());g.lineTo(w,h);g.fill();});}
 });ART_CACHE[kind]=t;return t;}
 function build(cat,o,col){
+  if(!SMALLTV)SMALLTV=tvTex();
   const g=new THREE.Group(); const c=col.hex; const w=o.w/100,d=o.d/100,h=o.h/100;
   const main=hexm(c,{r:.85}), wood=hexm(c,{r:.55}), blk=M.black;
   switch(cat){
@@ -551,6 +559,7 @@ function build(cat,o,col){
     case 'plant':{const pr=w/2*.55;LC(g,pr,.38*h/1.3,hexm(c,{r:.7}),0,0,0,24,pr*.85);LC(g,pr*.95,.02,M.soil,0,.38*h/1.3-.01,0);
       if(o.id==='olive'){LC(g,.03,h*.55,hexm(0x6B5A48),0,.3,0);for(let i=0;i<14;i++){const s=new THREE.Mesh(new THREE.IcosahedronGeometry(.14+.06*Math.sin(i*3),0),M.leaf[i%3]);const a=i*2.4;s.position.set(Math.cos(a)*.22,h*.7+Math.sin(i)*.18,Math.sin(a)*.22);g.add(s);}}
       else{LC(g,.025,h*.75,hexm(0x5A4A3A),0,.3,0);for(let i=0;i<18;i++){const s=new THREE.Mesh(new THREE.IcosahedronGeometry(o.id==='fiddle'?.12:.1,0),M.leaf[i%3]);const a=i*2.4,yy=.55+i/18*(h-.6);s.scale.set(1.3,.35,1);s.rotation.set(Math.sin(i)*.6,a,Math.cos(i)*.5);s.position.set(Math.cos(a)*.18*(1.2-i/18*.5),yy,Math.sin(a)*.18*(1.2-i/18*.5));g.add(s);}}break;}
+    case 'tvsmall':{const cy=1.25-h/2;LB(g,w,h,d,hexm(c,{r:.3}),0,cy,0);const sc=new THREE.Mesh(new THREE.PlaneGeometry(w-.02,h-.02),reg(new THREE.MeshBasicMaterial({map:SMALLTV,toneMapped:false})));sc.position.set(0,cy+h/2,d/2+.002);g.add(sc);LB(g,.3,.2,.02,blk,0,cy+h/2-.1,-d/2-.01);break;}
     case 'vanity':{LB(g,w,.03,d,wood,0,h-.03,0);LB(g,.42,h-.03,d-.02,wood,w/2-.22,0,0);for(let i=1;i<3;i++)LB(g,.38,.006,.004,blk,w/2-.22,h*i/3,d/2+.002);
       LB(g,.03,h-.03,d-.04,wood,-w/2+.02,0,0);
       const mr=Math.min(.32,w*.3);const mir=new THREE.Mesh(new THREE.CylinderGeometry(mr,mr,.02,48),mat(0xD7DEE2,{r:.04,mt:1}));mir.rotation.x=Math.PI/2;mir.position.set(-.05,h+.55,-d/2+.02);g.add(mir);
@@ -849,6 +858,7 @@ const VIEWS=[
   {n:'2F 剖切',f:2,p:[2.6,16.1,6.2],t:[2.3,3.6,-4.6]},
   {n:'3F 臥室',f:3,in:1,p:[1.75,8.5,-1.15],t:[4.4,7.6,-2.4],fov:62},
   {n:'3F 化妝台',f:3,in:1,p:[3.95,8.5,-1.15],t:[1.5,7.75,-1.85],fov:62},
+  {n:'3F 床上看電視',f:3,in:1,p:[4.0,8.05,-2.15],t:[1.5,7.9,-2.25],fov:62},
   {n:'3F 剖切',f:3,p:[2.6,19.4,6.2],t:[2.3,6.9,-4.6]},
   {n:'4F 主臥',f:4,in:1,p:[1.7,11.85,-1.1],t:[4.5,10.95,-2.3],fov:62},
   {n:'4F 露台',f:4,in:1,p:[1.05,11.9,-6.95],t:[1.6,10.8,-9.7],fov:62},
@@ -881,7 +891,7 @@ setNight();
 const body=document.getElementById('sheetBody'), title=document.getElementById('sheetTitle');
 let editing=null;
 const THEMES=[{k:'warm',n:'暖木灰',c:['#D8CFC1','#5E412D','#C98F5E']},{k:'mono',n:'黑白極簡',c:['#EDEBE6','#2E2A26','#4E4C49']},{k:'green',n:'自然綠意',c:['#CDB89A','#7D8B7C','#6E8A6A']}];
-function brandTag(b){return `<span class="brand ${b==='IKEA'?'b-ikea':'b-tr'}">${b==='IKEA'?'IKEA':'特力屋'}</span>`;}
+function brandTag(b){return `<span class="brand ${b==='IKEA'?'b-ikea':b==='特力屋'?'b-tr':'b-gen'}">${b}</span>`;}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function renderSheet(){
   if(editing){renderEditor(editing);return;}
@@ -890,7 +900,7 @@ function renderSheet(){
   title.textContent=f?`${f}F 家具搭配`:'全棟家具搭配';
   let html=`<div class="sect"><h2>一鍵配色</h2><div class="themes">${THEMES.map(t=>`<button class="theme" data-theme="${t.k}" aria-pressed="false"><span>${t.c.map(c=>`<i style="background:${c}"></i>`).join('')}</span>${t.n}</button>`).join('')}</div></div>`;
   html+=`<div class="sect"><h2>${f?'這層的家具':'全部家具'}（點選更換款式與顏色）</h2><div class="list">`;
-  for(const s of list){const {o,col}=sel(s.id);html+=`<button class="item" data-slot="${s.id}"><span class="dot" style="background:${col.hex}"></span><span style="min-width:0"><span class="iname">${esc(s.label)}</span> <span class="iroom">${esc(s.room)}</span><br><span class="isub">${o.brand==='IKEA'?'IKEA':'特力屋'}｜${esc(o.name)}・${esc(col.n)}</span></span><span aria-hidden="true">›</span></button>`;}
+  for(const s of list){const {o,col}=sel(s.id);html+=`<button class="item" data-slot="${s.id}"><span class="dot" style="background:${col.hex}"></span><span style="min-width:0"><span class="iname">${esc(s.label)}</span> <span class="iroom">${esc(s.room)}</span><br><span class="isub">${o.brand}｜${esc(o.name)}・${esc(col.n)}</span></span><span aria-hidden="true">›</span></button>`;}
   html+='</div></div>';
   body.innerHTML=html;
   body.querySelectorAll('.item').forEach(b=>b.onclick=()=>openEditor(b.dataset.slot));
@@ -920,8 +930,9 @@ function renderEditor(id){
    ${fit}
    ${s.tip?`<p class="tip">${esc(s.tip)}</p>`:''}
    <div class="sect"><h2>去官網看實品</h2><div class="links">
-     <a href="${searchUrl(o.brand==='IKEA'?'ikea.com.tw':'trplus.com.tw',o.q)}" target="_blank" rel="noopener">在${o.brand==='IKEA'?' IKEA ':'特力屋'}找「${esc(o.q)}」</a>
-     <a href="${searchUrl(other,s.label+' '+col.n)}" target="_blank" rel="noopener">到${o.brand==='IKEA'?'特力屋':' IKEA '}找類似款</a>
+     ${o.brand==='家電'?`<a href="https://www.google.com/search?q=${encodeURIComponent(o.q)}" target="_blank" rel="noopener">搜尋「${esc(o.q)}」</a><a href="${searchUrl('ikea.com.tw','電視 壁掛架')}" target="_blank" rel="noopener">IKEA 壁掛架／電視櫃</a>`:
+     `<a href="${searchUrl(o.brand==='IKEA'?'ikea.com.tw':'trplus.com.tw',o.q)}" target="_blank" rel="noopener">在${o.brand==='IKEA'?' IKEA ':'特力屋'}找「${esc(o.q)}」</a>
+     <a href="${searchUrl(other,s.label+' '+col.n)}" target="_blank" rel="noopener">到${o.brand==='IKEA'?'特力屋':' IKEA '}找類似款</a>`}
    </div></div>
    <p class="tip">尺寸、顏色名稱為參考，實際款式與價格以官網為準。</p>
   </div>`;
