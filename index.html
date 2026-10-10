@@ -79,8 +79,10 @@ h1{margin:4px 0 0;font:700 24px/1.25 var(--display);text-wrap:balance}
 .links a:hover{border-color:var(--accent);color:var(--accent)}
 .primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:10px 14px;font-weight:700;font-size:14px}
 .ghost{background:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px}
-.themes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.theme{display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:#211F1C;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:12px}
+.themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.theme{display:flex;flex-direction:column;gap:5px;align-items:flex-start;text-align:left;background:#211F1C;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px}
+.theme .tn{font-size:14px}
+.theme small{color:var(--muted);font-size:11.5px;line-height:1.45}
 .theme[aria-pressed="true"]{border-color:var(--accent)}
 .theme span{display:flex;gap:3px}
 .theme span i{width:14px;height:14px;border-radius:3px;display:block}
@@ -232,11 +234,13 @@ const TX={
   tileDark:ctex(256,256,(g,w,h)=>{g.fillStyle='#6F6C67';g.fillRect(0,0,w,h);const r=rng(9);for(let i=0;i<400;i++){g.fillStyle=`rgba(255,255,255,${r()*.05})`;g.fillRect(r()*w,r()*h,4,2);}g.fillStyle='#55524E';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h);}),
   garage:ctex(256,256,(g,w,h)=>{g.fillStyle='#8E8A84';g.fillRect(0,0,w,h);const r=rng(5);for(let i=0;i<500;i++){g.fillStyle=`rgba(40,40,40,${r()*.08})`;g.fillRect(r()*w,r()*h,3,3);}g.fillStyle='#74716C';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h);}),
   grille:ctex(256,64,(g,w,h)=>{g.fillStyle='#6B4A33';g.fillRect(0,0,w,h);const r=rng(11);for(let i=0;i<40;i++){g.fillStyle=`rgba(40,25,15,${r()*.25})`;g.fillRect(r()*w,0,1,h);}for(let i=0;i<4;i++){g.fillStyle='#2A1C12';g.fillRect(i*64+52,0,12,h);}}),
+  grilleLight:ctex(256,64,(g,w,h)=>{g.fillStyle='#E3CDAA';g.fillRect(0,0,w,h);const r=rng(17);for(let i=0;i<40;i++){g.fillStyle=`rgba(150,110,70,${r()*.18})`;g.fillRect(r()*w,0,1,h);}for(let i=0;i<4;i++){g.fillStyle='#A68562';g.fillRect(i*64+54,0,10,h);}}),
   marble:ctex(512,512,(g,w,h)=>{g.fillStyle='#ECE9E3';g.fillRect(0,0,w,h);const r=rng(21);g.strokeStyle='rgba(120,115,110,.35)';for(let i=0;i<9;i++){g.lineWidth=.6+r()*1.6;g.beginPath();let x=r()*w,y=0;g.moveTo(x,y);while(y<h){x+=(r()-.5)*60;y+=30+r()*40;g.lineTo(x,y);}g.stroke();}}),
   deck:ctex(256,256,(g,w,h)=>{for(let x=0;x<w;x+=32){const v=120+(x*7%30);g.fillStyle=`rgb(${v+20},${v-10},${v-40})`;g.fillRect(x,0,30,h);g.fillStyle='#3A2A1D';g.fillRect(x+30,0,2,h);}}),
   mc:ctex(512,512,(g,w,h)=>{g.fillStyle='#CBC6BE';g.fillRect(0,0,w,h);const r=rng(13);for(let i=0;i<60;i++){const x=r()*w,y=r()*h,rad=20+r()*90;const gr=g.createRadialGradient(x,y,0,x,y,rad);gr.addColorStop(0,`rgba(${r()<.5?150:225},${r()<.5?145:220},140,.10)`);gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(x-rad,y-rad,rad*2,rad*2);}}),
 };
-function tiled(t,tile,w,d,o={}){const c=t.clone();c.needsUpdate=true;c.repeat.set(w/tile,d/tile);return mat(o.color??0xffffff,{r:o.r??0.75,x:{map:c}});}
+const FLOORS=[], GRILLES=[];
+function tiled(t,tile,w,d,o={}){const c=t.clone();c.needsUpdate=true;c.repeat.set(w/tile,d/tile);const m=mat(o.color??0xffffff,{r:o.r??0.75,x:{map:c}});if(t===TX.oak)FLOORS.push({m,w,d});return m;}
 const M={
   plaster:mat(0xEDEAE4,{r:.92}), mc:null, black:mat(0x1E1D1B,{r:.45,mt:.4}), stone:mat(0xA4A19B,{r:.9}),
   walnut:mat(0x5E412D,{r:.6}), glass:reg(new THREE.MeshPhysicalMaterial({color:0xBFD3DC,roughness:.05,metalness:0,transmission:0,transparent:true,opacity:.22,depthWrite:false})),
@@ -247,7 +251,7 @@ const M={
   water:mat(0x55524E,{r:.4}), soil:mat(0x4A3A2C), gravel:mat(0xB5AFA4,{r:1}), grass:mat(0x7E9466,{r:1}),
 };
 M.mc=reg(new THREE.MeshStandardMaterial({color:0xffffff,map:TX.mc,roughness:.9}));
-M.grille=(len)=>{const c=TX.grille.clone();c.needsUpdate=true;c.repeat.set(len/0.4,1);return reg(new THREE.MeshStandardMaterial({map:c,roughness:.6}));};
+M.grille=(len)=>{const c=TX.grille.clone();c.needsUpdate=true;c.repeat.set(len/0.4,1);const m=reg(new THREE.MeshStandardMaterial({map:c,roughness:.6}));GRILLES.push({m,len});return m;};
 M.marble=reg(new THREE.MeshStandardMaterial({map:TX.marble,roughness:.25}));
 
 /* ---------- 幾何 helper：平面座標 (x, y, z 往後為正) ---------- */
@@ -342,6 +346,7 @@ const CAT={
     {id:'kivik3',brand:'IKEA',name:'KIVIK 三人座沙發',w:228,d:95,h:83,style:'arm',q:'KIVIK 三人座沙發',colors:[C('淺米色','#D8CFC1','warm'),C('灰褐色','#9C9389','warm'),C('深灰色','#4E4C49','mono'),C('灰綠色','#7D8B7C','green')]},
     {id:'soderhamn',brand:'IKEA',name:'SÖDERHAMN 三人座沙發',w:198,d:99,h:83,style:'low',q:'SÖDERHAMN 三人座沙發',colors:[C('米白色','#E4DED3','warm'),C('中灰色','#7A7772','mono'),C('灰綠色','#83907E','green')]},
     {id:'vimle3',brand:'IKEA',name:'VIMLE 三人座沙發',w:241,d:98,h:83,style:'arm',q:'VIMLE 三人座沙發',colors:[C('米色','#CFC3B0','warm'),C('深灰色','#55524E','mono'),C('灰綠色','#7B8877','green')]},
+    {id:'tr-velvet',brand:'特力屋',name:'絨布沙發 三人座',w:215,d:92,h:80,style:'arm',q:'絨布沙發 三人',colors:[C('深藍絨','#2E3A55','mono'),C('墨綠絨','#2F4A3E','green'),C('焦糖絨','#A8693C','warm')]},
     {id:'tr-sofa',brand:'特力屋',name:'布沙發 三人座',w:210,d:90,h:85,style:'arm',q:'三人座 布沙發',colors:[C('奶茶色','#C9B59C','warm'),C('鐵灰色','#5B5956','mono'),C('苔綠色','#6F7F65','green')]},
   ],
   tvbench:[
@@ -352,6 +357,7 @@ const CAT={
   coffee:[
     {id:'listerby',brand:'IKEA',name:'LISTERBY 咖啡桌',w:140,d:60,h:45,shape:'rect',q:'LISTERBY 咖啡桌',colors:[C('深褐色','#4A3426','warm'),C('白橡木','#C9B08C','green')]},
     {id:'lack',brand:'IKEA',name:'LACK 咖啡桌',w:90,d:55,h:45,shape:'rect',q:'LACK 咖啡桌',colors:[C('黑褐色','#2C2723','mono'),C('白色','#EDEBE6','mono'),C('白橡木紋','#CDB89A','green')]},
+    {id:'tr-marble',brand:'特力屋',name:'大理石紋圓茶几',w:90,d:90,h:40,shape:'round',q:'大理石 茶几',colors:[C('白色大理石','#E9E6E0','mono'),C('黑色大理石','#2A2A2A','mono')]},
     {id:'tr-round',brand:'特力屋',name:'圓形茶几',w:80,d:80,h:42,shape:'round',q:'圓形茶几',colors:[C('胡桃木色','#5A3F2C','warm'),C('黑色','#222','mono'),C('原木色','#C4A47E','green')]},
   ],
   rug:[
@@ -362,6 +368,7 @@ const CAT={
   table:[
     {id:'ekedalen',brand:'IKEA',name:'EKEDALEN 延伸餐桌',w:120,d:80,h:75,ext:180,q:'EKEDALEN 延伸桌',colors:[C('深褐色','#3E2C21','warm'),C('白色','#EDEBE6','mono'),C('橡木色','#B99872','green')]},
     {id:'lisabo',brand:'IKEA',name:'LISABO 餐桌',w:140,d:78,h:74,q:'LISABO 餐桌',colors:[C('白蠟木貼皮','#D2BC97','warm'),C('黑色','#232220','mono')]},
+    {id:'tr-slab',brand:'特力屋',name:'岩板餐桌',w:160,d:90,h:75,q:'岩板 餐桌',colors:[C('白岩板','#E7E4DE','mono'),C('灰岩板','#8F8C88','mono')]},
     {id:'tr-table',brand:'特力屋',name:'實木餐桌',w:160,d:90,h:75,q:'實木 餐桌',colors:[C('胡桃木色','#5A3F2C','warm'),C('原木色','#C4A47E','green'),C('黑色','#232220','mono')]},
   ],
   chair:[
@@ -890,7 +897,37 @@ setNight();
 /* ---------- 家具面板 ---------- */
 const body=document.getElementById('sheetBody'), title=document.getElementById('sheetTitle');
 let editing=null;
-const THEMES=[{k:'warm',n:'暖木灰',c:['#D8CFC1','#5E412D','#C98F5E']},{k:'mono',n:'黑白極簡',c:['#EDEBE6','#2E2A26','#4E4C49']},{k:'green',n:'自然綠意',c:['#CDB89A','#7D8B7C','#6E8A6A']}];
+const STYLES=[
+ {k:'warm',n:'現代暖木',d:'胡桃木格柵、暖灰牆、米色布沙發，溫潤好住',sw:['#EDEAE4','#5E412D','#D8CFC1','#C98F5E'],wall:'#EDEAE4',floor:['oak','#FFFFFF'],grille:['grille','#FFFFFF'],glow:'#FFC77A',
+  pick:{sofa:['kivik3','淺米色'],tvbench:['besta180','胡桃木紋'],coffee:['listerby','深褐色'],rug:['vindum','白色'],table:['ekedalen','深褐色'],chair:['odger','白色'],pendant:['skurup','黑色'],bed:['malm','白橡木紋'],bedK:['hemnes180','淺褐色'],nightstand:['malm2','白橡木紋'],wardrobe:['pax200','暖灰色'],wardrobeS:['pax100','暖灰色'],desk:['micke','白橡木紋'],armchair:['strandmon','米白色'],floorlamp:['tr-fl','米白燈罩'],plant:['fiddle','陶土盆'],curtain:['hilja','米色'],art:['bjorksta','暖色抽象'],vanity:['tr-vanity','奶茶色'],outdoor:['applaro','褐色染色'],book:['billy','橡木貼皮'],shoe:['tr-shoe','胡桃木紋']}},
+ {k:'lux',n:'豪宅風',d:'大理石地坪與電視牆、絲絨沙發、香檳金燈飾',sw:['#E9E5DE','#2E3A55','#B89A6A','#2A2A2A'],wall:'#E6E1D9',floor:['marble','#FFFFFF'],grille:['marble','#E4E0D9'],glow:'#FFD49A',
+  pick:{sofa:['tr-velvet','深藍絨'],tvbench:['tr-tv','霧黑色'],coffee:['tr-marble','白色大理石'],rug:['tr-rug','炭灰色'],table:['tr-slab','白岩板'],chair:['teodores','黑色'],pendant:['tr-linear','香檳金'],bed:['slattum','淺灰色'],bedK:['slattum180','淺灰色'],nightstand:['tr-ns','胡桃木色'],wardrobe:['tr-sys','胡桃木紋'],wardrobeS:['tr-sysS','雪白'],desk:['tr-desk','胡桃木色'],armchair:['strandmon','墨綠色'],floorlamp:['hektarF','深灰色'],plant:['olive','灰色盆'],curtain:['majgull','深灰色'],art:['bjorksta','黑白線條'],vanity:['tr-vanity','白色'],outdoor:['nammaro','淺褐＋米色墊'],book:['tr-book','胡桃木紋'],shoe:['tr-shoe','胡桃木紋']}},
+ {k:'simple',n:'簡約風',d:'全白櫃體、淺木地板、留白多，乾淨好整理',sw:['#F4F2EE','#E8DCC8','#EDEBE6','#B79E7A'],wall:'#F4F2EE',floor:['oak','#F6F1E9'],grille:['grilleLight','#FFFFFF'],glow:'#FFE6C4',
+  pick:{sofa:['soderhamn','米白色'],tvbench:['besta180','白色'],coffee:['lack','白色'],rug:['lohals','自然色'],table:['lisabo','白蠟木貼皮'],chair:['teodores','白色'],pendant:['skurup','黑色'],bed:['malm','白色'],bedK:['malm180','白色'],nightstand:['malm2','白色'],wardrobe:['pax200','白色'],wardrobeS:['pax100','白色'],desk:['micke','白色'],armchair:['poang','米色'],floorlamp:['tr-fl','米白燈罩'],plant:['fejka','白色盆'],curtain:['hilja','白色'],art:['tr-art','黑白線條'],vanity:['tr-vanity','白色'],outdoor:['applaro','灰褐色'],book:['billy','白色'],shoe:['hemnesS','白色']}},
+ {k:'modern',n:'現代風',d:'黑白灰高對比、大板磚、深色木格柵',sw:['#E6E6E4','#2E2A26','#55524E','#C9C9C6'],wall:'#E4E4E2',floor:['tile','#CFCFCC'],grille:['grille','#5A5A5A'],glow:'#F4F1EA',
+  pick:{sofa:['vimle3','深灰色'],tvbench:['besta240','黑褐色'],coffee:['lack','黑褐色'],rug:['vindum','深灰色'],table:['tr-table','黑色'],chair:['teodores','黑色'],pendant:['tr-linear','霧黑'],bed:['malm','黑褐色'],bedK:['malm180','黑褐色'],nightstand:['malm2','黑褐色'],wardrobe:['pax200','黑褐色'],wardrobeS:['pax150s','白色'],desk:['lagkapten','黑褐色'],armchair:['tr-arm','鐵灰色'],floorlamp:['hektarF','深灰色'],plant:['fiddle','黑色盆'],curtain:['majgull','深灰色'],art:['bjorksta','黑白線條'],vanity:['tr-vanity','白色'],outdoor:['tr-out','霧黑'],book:['kallax','黑褐色'],shoe:['hemnesS','黑褐色']}},
+ {k:'artsy',n:'文青風',d:'原木家具、綠色沙發、黃麻地毯與大量植栽',sw:['#EFE9DF','#C4A47E','#7D8B7C','#B79E7A'],wall:'#EFE9DF',floor:['oak','#EBD6B4'],grille:['grilleLight','#E8C9A0'],glow:'#FFC77A',
+  pick:{sofa:['kivik3','灰綠色'],tvbench:['tr-tv','原木色'],coffee:['tr-round','原木色'],rug:['lohals','自然色'],table:['tr-table','原木色'],chair:['tr-chair','原木色'],pendant:['hektarP','深灰色'],bed:['hemnes','淺褐色'],bedK:['hemnes180','淺褐色'],nightstand:['hemnesN','淺褐色'],wardrobe:['tr-sys','淺木紋'],wardrobeS:['pax150s','白橡木紋'],desk:['tr-desk','原木色'],armchair:['poang','米色'],floorlamp:['tr-fl','米白燈罩'],plant:['olive','陶土盆'],curtain:['hilja','米色'],art:['bjorksta','綠色山景'],vanity:['tr-vanity','奶茶色'],outdoor:['applaro','褐色染色'],book:['kallax','白橡木紋'],shoe:['hemnesS','白色']}},
+ {k:'muji',n:'日式無印',d:'白橡木、亞麻米色、低彩度，安靜放鬆',sw:['#F1EEE8','#CDB89A','#C9B59C','#E9E3D7'],wall:'#F1EEE8',floor:['oak','#F3EADB'],grille:['grilleLight','#F2E6D2'],glow:'#FFE2B8',
+  pick:{sofa:['tr-sofa','奶茶色'],tvbench:['besta180','白橡木紋'],coffee:['listerby','白橡木'],rug:['tr-rug','燕麥色'],table:['ekedalen','橡木色'],chair:['odger','白色'],pendant:['skurup','黑色'],bed:['malm','白橡木紋'],bedK:['malm180','白橡木紋'],nightstand:['malm2','白橡木紋'],wardrobe:['pax200','白橡木紋'],wardrobeS:['pax100','白橡木紋'],desk:['lagkapten','白橡木紋'],armchair:['strandmon','米白色'],floorlamp:['tr-fl','米白燈罩'],plant:['fejka','白色盆'],curtain:['tr-roller','亞麻白'],art:['tr-art','綠色山景'],vanity:['tr-vanity','奶茶色'],outdoor:['nammaro','淺褐＋灰綠墊'],book:['billy','橡木貼皮'],shoe:['tr-shoe','雪白']}},
+];
+function applyArch(st){
+  M.plaster.color.set(st.wall);
+  const texOf=(k)=>k==='marble'?[TX.marble,1.6,.22]:k==='tile'?[TX.tile,.8,.5]:[TX.oak,1.2,.75];
+  const [ft,ftile,fr]=texOf(st.floor[0]);
+  for(const f of FLOORS){const t=ft.clone();t.needsUpdate=true;t.repeat.set(f.w/ftile,f.d/ftile);f.m.map=t;f.m.color.set(st.floor[1]);f.m.roughness=fr;f.m.needsUpdate=true;}
+  for(const g of GRILLES){let t;if(st.grille[0]==='marble'){t=TX.marble.clone();t.repeat.set(1,1);g.m.roughness=.2;}else{t=(st.grille[0]==='grilleLight'?TX.grilleLight:TX.grille).clone();t.repeat.set(g.len/0.4,1);g.m.roughness=.6;}t.needsUpdate=true;g.m.map=t;g.m.color.set(st.grille[1]);g.m.needsUpdate=true;}
+  M.glow.emissive.set(st.glow); for(const l of NIGHT)l.color.set(st.glow);
+}
+function applyStyle(k){
+  const st=STYLES.find(x=>x.k===k)||STYLES[0];
+  for(const sl of SLOTS){const pk=st.pick[sl.cat];if(!pk)continue;const o=CAT[sl.cat].find(x=>x.id===pk[0]);if(!o)continue;const c=o.colors.find(x=>x.n===pk[1])||o.colors[0];state[sl.id]={o:o.id,c:c.n};}
+  state.__style=st.k; save(); applyArch(st);
+  for(const sl of SLOTS)if(!sl.follow)place(sl.id); for(const sl of SLOTS)if(sl.follow)place(sl.id);
+  renderSheet();
+}
+applyArch(STYLES.find(x=>x.k===state.__style)||STYLES[0]);
+
 function brandTag(b){return `<span class="brand ${b==='IKEA'?'b-ikea':b==='特力屋'?'b-tr':'b-gen'}">${b}</span>`;}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function renderSheet(){
@@ -898,13 +935,14 @@ function renderSheet(){
   const f=curFloor==='all'?null:Number(curFloor);
   const list=SLOTS.filter(s=>!f||s.f===f);
   title.textContent=f?`${f}F 家具搭配`:'全棟家具搭配';
-  let html=`<div class="sect"><h2>一鍵配色</h2><div class="themes">${THEMES.map(t=>`<button class="theme" data-theme="${t.k}" aria-pressed="false"><span>${t.c.map(c=>`<i style="background:${c}"></i>`).join('')}</span>${t.n}</button>`).join('')}</div></div>`;
+  const curSt=state.__style||'warm';
+  let html=`<div class="sect"><h2>風格方案（套用全棟）</h2><div class="themes">${STYLES.map(t=>`<button class="theme" data-style="${t.k}" aria-pressed="${t.k===curSt}"><span>${t.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span><b class="tn">${t.n}</b><small>${t.d}</small></button>`).join('')}</div><p class="tip">套用後仍可逐件更換款式與顏色。</p></div>`;
   html+=`<div class="sect"><h2>${f?'這層的家具':'全部家具'}（點選更換款式與顏色）</h2><div class="list">`;
   for(const s of list){const {o,col}=sel(s.id);html+=`<button class="item" data-slot="${s.id}"><span class="dot" style="background:${col.hex}"></span><span style="min-width:0"><span class="iname">${esc(s.label)}</span> <span class="iroom">${esc(s.room)}</span><br><span class="isub">${o.brand}｜${esc(o.name)}・${esc(col.n)}</span></span><span aria-hidden="true">›</span></button>`;}
   html+='</div></div>';
   body.innerHTML=html;
   body.querySelectorAll('.item').forEach(b=>b.onclick=()=>openEditor(b.dataset.slot));
-  body.querySelectorAll('.theme').forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme,f));
+  body.querySelectorAll('.theme').forEach(b=>b.onclick=()=>applyStyle(b.dataset.style));
 }
 function applyTheme(k,f){
   for(const s of SLOTS){if(f&&s.f!==f)continue;const {o}=sel(s.id);const c=o.colors.find(x=>x.tone===k);if(c){state[s.id]={o:o.id,c:c.n};}}
@@ -977,7 +1015,7 @@ function frame(t){
 goView(VIEWS[0],true);
 document.getElementById('loading').hidden=true;
 requestAnimationFrame(frame);
-window.__house={obj:OBJ,go:(n)=>goView(VIEWS.find(v=>v.n===n),true),night:(on)=>{night=on;setNight();},ready:true};
+window.__house={obj:OBJ,style:(k)=>applyStyle(k),go:(n)=>goView(VIEWS.find(v=>v.n===n),true),night:(on)=>{night=on;setNight();},ready:true};
 </script>
 
 </body>
