@@ -446,6 +446,7 @@ const CAT={
     {id:'tr-rack',brand:'特力屋',name:'重型鐵力士架 120',w:120,d:45,h:180,q:'鐵力士架',colors:[C('霧黑','#262626','mono'),C('白色','#E8E8E6','mono')]},
   ],
   book:[
+    {id:'billy3',brand:'IKEA',name:'BILLY 書櫃 ×3（整面牆）',w:240,d:28,h:202,q:'BILLY 書櫃',colors:[C('白色','#EDEBE6','mono'),C('黑褐色','#2E2A26','mono'),C('橡木貼皮','#C2A57F','green')]},
     {id:'billy',brand:'IKEA',name:'BILLY 書櫃 ×2',w:160,d:28,h:202,q:'BILLY 書櫃',colors:[C('白色','#EDEBE6','mono'),C('黑褐色','#2E2A26','mono'),C('橡木貼皮','#C2A57F','green')]},
     {id:'kallax',brand:'IKEA',name:'KALLAX 層架 2×4',w:77,d:39,h:147,q:'KALLAX 層架',colors:[C('白色','#EDEBE6','mono'),C('白橡木紋','#CDB89A','green'),C('黑褐色','#2E2A26','mono')]},
     {id:'tr-book',brand:'特力屋',name:'系統書櫃 160',w:160,d:35,h:200,q:'書櫃',colors:[C('淺木紋','#C8AE8A','green'),C('胡桃木紋','#5E412D','warm')]},
@@ -454,6 +455,23 @@ const CAT={
     {id:'tv32',brand:'家電',name:'32 吋液晶電視',w:73,d:6,h:43,q:'32吋 電視',colors:[C('黑色邊框','#111111','mono')]},
     {id:'tv43',brand:'家電',name:'43 吋液晶電視',w:97,d:6,h:57,q:'43吋 電視',colors:[C('黑色邊框','#111111','mono')]},
     {id:'tv50',brand:'家電',name:'50 吋液晶電視',w:112,d:6,h:65,q:'50吋 電視',colors:[C('黑色邊框','#111111','mono')]},
+  ],
+  pcdesk:[
+    {id:'lagkaptenPC',brand:'IKEA',name:'LAGKAPTEN／ALEX 書桌 140',w:140,d:60,h:73,mon:2,q:'LAGKAPTEN ALEX 書桌',colors:[C('白橡木紋','#CDB89A','green'),C('白色','#EDEBE6','mono'),C('黑褐色','#2E2A26','mono')]},
+    {id:'mittzon',brand:'IKEA',name:'MITTZON 電動升降桌 140',w:140,d:80,h:74,mon:2,lift:true,q:'MITTZON 升降桌',colors:[C('胡桃木紋','#5E412D','warm'),C('白色','#EDEBE6','mono')]},
+    {id:'utespelare',brand:'IKEA',name:'UTESPELARE 電競桌 160',w:160,d:80,h:74,mon:2,rgb:true,q:'UTESPELARE 電競桌',colors:[C('黑色','#232323','mono')]},
+    {id:'tr-pc',brand:'特力屋',name:'電腦桌 120',w:120,d:60,h:75,mon:1,q:'電腦桌 120',colors:[C('原木色','#C4A47E','green'),C('胡桃木色','#5A3F2C','warm'),C('白色','#EDEBE6','mono')]},
+  ],
+  pcchair:[
+    {id:'markus',brand:'IKEA',name:'MARKUS 辦公椅',w:62,d:60,h:129,q:'MARKUS 辦公椅',colors:[C('深灰色','#3B3B3A','mono'),C('淺灰色','#A9A8A4','mono')]},
+    {id:'utespelareC',brand:'IKEA',name:'UTESPELARE 電競椅',w:69,d:72,h:138,gaming:true,q:'UTESPELARE 電競椅',colors:[C('黑色','#232323','mono'),C('灰色','#6E6E6C','mono')]},
+    {id:'tr-ergo',brand:'特力屋',name:'人體工學椅',w:65,d:62,h:120,q:'人體工學椅',colors:[C('黑色','#232323','mono'),C('灰色','#8A8A88','mono')]},
+  ],
+  bedB:[
+    {id:'malmS',brand:'IKEA',name:'MALM 單人床框 90',w:106,d:209,h:100,hb:'panel',q:'MALM 單人床框',colors:[C('白橡木紋','#CDB89A','green'),C('白色','#EDEBE6','mono'),C('黑褐色','#2E2A26','mono')]},
+    {id:'hemnesD',brand:'IKEA',name:'HEMNES 坐臥兩用床（白天當沙發）',w:88,d:208,h:83,hb:'wood',day:true,q:'HEMNES 坐臥兩用床',colors:[C('白色','#EDEBE6','mono'),C('黑褐色','#2E2A26','mono')]},
+    {id:'tr-single',brand:'特力屋',name:'單人床架 3.5 尺',w:106,d:188,h:90,hb:'soft',q:'單人床架 3.5尺',colors:[C('奶茶色','#C9B59C','warm'),C('灰綠色','#7D8B7C','green')]},
+    {id:'sundvik',brand:'IKEA',name:'SUNDVIK 嬰兒床（未來嬰兒房）',w:66,d:126,h:85,crib:true,q:'SUNDVIK 嬰兒床',colors:[C('白色','#EDEBE6','mono'),C('灰褐色','#8E8378','warm')]},
   ],
   vanity:[
     {id:'tr-vanity',brand:'特力屋',name:'化妝台（附鏡）',w:80,d:40,h:76,q:'化妝台 附鏡',colors:[C('奶茶色','#C9B59C','warm'),C('胡桃木色','#5A3F2C','warm'),C('白色','#EDEBE6','mono')]},
@@ -501,11 +519,13 @@ const SLOTS=[
   {id:'f3-art',f:3,room:'3F 臥室 A',label:'床頭掛畫',cat:'art',wallArt:{axis:'x',c:W-.09,s:2.05,y:1.65,face:'-x'}},
   {id:'f3-vanity',f:3,room:'3F 臥室 A',label:'化妝台',cat:'vanity',z:1.36,face:'+x',back:{x:1.53},avail:.82,availD:.45,tip:'化妝台靠浴室牆、靠窗那一側，白天自然光化妝最準；旁邊留給小電視，所以寬度建議 80 cm 左右，深度 45 cm 以內。'},
   {id:'f3-tv',f:3,room:'3F 臥室 A',label:'小電視',cat:'tvsmall',z:2.32,face:'+x',back:{x:1.53},avail:.98,tip:'壁掛在床尾正對面的浴室牆上，畫面中心離地約 125 cm，躺在床上看剛好；床到電視約 2.4 米，32–43 吋最合適。牆內記得預留插座與天線／網路線。'},
-  {id:'f3-bedB',f:3,room:'3F 臥室 B',label:'床',cat:'bed',z:8.35,face:'+x',back:{x:.08},avail:2.75},
-  {id:'f3-deskB',f:3,room:'3F 臥室 B',label:'書桌',cat:'desk',x:2.05,face:'rear',back:{z:9.8},avail:1.4},
-  {id:'f3-wardB',f:3,room:'3F 臥室 B',label:'衣櫃',cat:'wardrobeS',x:2.0,face:'rear',back:{z:7.32},avail:1.45},
-  {id:'f3-book',f:3,room:'3F 走廊',label:'書櫃',cat:'book',z:5.4,face:'+x',back:{x:.08},avail:2.0},
-  {id:'f3-plantB',f:3,room:'3F 臥室 B',label:'植栽',cat:'plant',x:.35,z:9.5},
+  {id:'f3-deskB',f:3,room:'3F 書房臥室',label:'PC 電腦桌',cat:'pcdesk',z:8.08,face:'+x',back:{x:.08},avail:1.38,tip:'電腦桌靠鄰棟牆、窗戶在側邊，螢幕不反光也不背光；雙螢幕建議桌寬 140 cm 以上。桌下預留電源與網路孔，主機放桌下通風處。'},
+  {id:'f3-chairB',f:3,room:'3F 書房臥室',label:'電腦椅',cat:'pcchair',follow:'f3-deskB'},
+  {id:'f3-book',f:3,room:'3F 書房臥室',label:'書櫃牆',cat:'book',z:8.6,face:'-x',back:{x:2.72},avail:2.42,tip:'整面書櫃做出書房氣息；有小孩後務必用壁固五金固定在牆上防傾倒，下層放繪本與玩具收納。'},
+  {id:'f3-bedB',f:3,room:'3F 書房臥室',label:'床（可換嬰兒床）',cat:'bedB',z:9.3,face:'+x',back:{x:.08},avail:1.06,tip:'靠窗放單人床或坐臥兩用床，白天可當閱讀沙發；未來改嬰兒房時換成嬰兒床，桌子留給大人，等小孩大了再換成兒童書桌。'},
+  {id:'f3-rugB',f:3,room:'3F 書房臥室',label:'地毯',cat:'rug',x:1.45,z:8.2,face:'+x',small:true},
+  {id:'f3-curtainB',f:3,room:'3F 書房臥室',label:'窗簾',cat:'curtain',win:{axis:'z',c:9.8,a:.4,e:2.4,sideFace:'front'}},
+  {id:'f3-plantB',f:3,room:'3F 書房臥室',label:'植栽',cat:'plant',x:2.3,z:9.55},
   // 4F
   {id:'f4-bed',f:4,room:'4F 主臥',label:'床',cat:'bedK',z:2.1,face:'-x',back:{x:W-.1},avail:2.1,tip:'主臥用 6 尺床，床頭牆做胡桃木格柵＋間接光。'},
   {id:'f4-ns',f:4,room:'4F 主臥',label:'床頭櫃',cat:'nightstand',pair:true,face:'-x',back:{x:W-.1},follow:'f4-bed'},
@@ -552,7 +572,24 @@ function build(cat,o,col){
     case 'chair':{LB(g,w,.05,d*.85,wood,0,.44,0);for(const sx of[-1,1])for(const sz of[-1,1])LB(g,.03,.44,.03,o.id==='tr-chair'?wood:blk,sx*(w/2-.04),0,sz*(d*.85/2-.04));LB(g,w,h-.49,.04,wood,0,.49,-d*.85/2+.02);break;}
     case 'pendant':{if(o.shape==='linear'){LB(g,w,.04,.06,hexm(c,{r:.4,mt:.5}),0,0,0);LB(g,w-.04,.01,.04,M.strip,0,-.005,0);LB(g,.004,.8,.004,blk,-w/2+.1,.04,0);LB(g,.004,.8,.004,blk,w/2-.1,.04,0);}
       else{for(const sx of[-.35,.35]){const sh=new THREE.Mesh(new THREE.SphereGeometry(w/2,24,12,0,Math.PI*2,0,Math.PI/2),hexm(c,{r:.4,mt:.4,x:{side:THREE.DoubleSide}}));sh.position.set(sx,0,0);g.add(sh);const bl=new THREE.Mesh(new THREE.SphereGeometry(.035,12,8),M.glow);bl.position.set(sx,.02,0);g.add(bl);LB(g,.004,.8,.004,blk,sx,w/2,0);}}break;}
-    case 'bed':case 'bedK':{LB(g,w,.28,d,wood,0,.0,0);LB(g,w-.08,.22,d-.12,hexm(0xF1EEE8,{r:.95}),0,.28,.04);
+    case 'pcdesk':{const th=.035;LB(g,w,th,d,wood,0,h-th,0);
+      if(o.lift){LB(g,.07,h-th,.07,blk,-w/2+.15,0,-d/2+.2);LB(g,.07,h-th,.07,blk,w/2-.15,0,-d/2+.2);LB(g,.08,.03,d-.1,blk,-w/2+.15,0,0);LB(g,.08,.03,d-.1,blk,w/2-.15,0,0);}
+      else{LB(g,.04,h-th,d-.06,blk,-w/2+.03,0,0);LB(g,.38,h-th-.02,d-.04,wood,w/2-.21,0,0);for(let i=1;i<4;i++)LB(g,.34,.006,.004,blk,w/2-.21,h*i/4,d/2-.01);}
+      const scr=SMALLTV, mw=o.mon===2?.62:.7;
+      for(let i=0;i<o.mon;i++){const x=o.mon===2?(i?.33:-.33):0;const ang=o.mon===2?(i?-.25:.25):0;const mg=new THREE.Group();LB(mg,mw,.37,.03,hexm(0x151515,{r:.3}),0,.12,0);const pl=new THREE.Mesh(new THREE.PlaneGeometry(mw-.02,.35),reg(new THREE.MeshBasicMaterial({map:scr,toneMapped:false})));pl.position.set(0,.305,.016);mg.add(pl);LB(mg,.03,.12,.03,blk,0,0,-.02);LB(mg,.22,.01,.16,blk,0,0,-.02);mg.position.set(x,h,-d/2+.2);mg.rotation.y=ang;g.add(mg);}
+      LB(g,.44,.02,.14,hexm(0x1E1E1E),0,h,d/2-.18);LB(g,.07,.02,.11,hexm(0x1E1E1E),.32,h,d/2-.17);LB(g,.9,.003,.38,hexm(0x2A2A2A,{r:1}),0,h,d/2-.22);
+      LB(g,.22,.48,.46,hexm(0x1A1A1A,{r:.4,mt:.3}),-w/2+.25,.02,-.02);LB(g,.005,.42,.36,o.rgb?M.glow:hexm(0x333333),-w/2+.36,.05,-.02);
+      if(o.rgb)LB(g,w-.1,.012,.012,reg(new THREE.MeshStandardMaterial({color:0x7A5CFF,emissive:0x7A5CFF,emissiveIntensity:1.4})),0,h-.04,-d/2+.02);
+      LC(g,.07,.02,blk,w/2-.15,h,-d/2+.15);LC(g,.008,.42,blk,w/2-.15,h+.02,-d/2+.15);LB(g,.22,.04,.08,blk,w/2-.24,h+.42,-d/2+.15);
+      LB(g,.2,.28,.03,hexm(0xC98F5E),-w/2+.25,h,-d/2+.06);LB(g,.18,.25,.03,hexm(0x4E6B66),-w/2+.45,h,-d/2+.06);break;}
+    case 'pcchair':{LC(g,.3,.03,blk,0,.04,0,5);for(let i=0;i<5;i++){const a=i/5*Math.PI*2;const wh=new THREE.Mesh(new THREE.SphereGeometry(.03,8,6),blk);wh.position.set(Math.cos(a)*.3,.03,Math.sin(a)*.3);g.add(wh);}
+      LC(g,.025,.4,blk,0,.07,0);LB(g,.5,.08,.5,main,0,.46,0);const bk=LB(g,.48,o.gaming?.82:.62,.08,main,0,.56,-.24);bk.rotation.x=-.1;
+      if(o.gaming){LB(g,.36,.18,.09,hexm(0xC0262A),0,1.2,-.3);LB(g,.08,.5,.08,hexm(0xC0262A),-.2,.6,-.22);LB(g,.08,.5,.08,hexm(0xC0262A),.2,.6,-.22);}
+      LB(g,.05,.04,.3,blk,-.27,.68,0);LB(g,.05,.04,.3,blk,.27,.68,0);LB(g,.03,.2,.03,blk,-.27,.48,0);LB(g,.03,.2,.03,blk,.27,.48,0);break;}
+    case 'bed':case 'bedK':case 'bedB':{if(o.crib){LB(g,w,.1,d,wood,0,.25,0);LB(g,w-.06,.1,d-.06,hexm(0xF4F1EA,{r:1}),0,.35,0);for(const sz of[-1,1])LB(g,w,h,.05,wood,0,0,sz*(d/2-.025));for(const sx of[-1,1]){for(let i=0;i<14;i++)LB(g,.02,h-.3,.02,wood,sx*(w/2-.015),.3,-d/2+.08+i*(d-.16)/13);LB(g,.04,.04,d,wood,sx*(w/2-.02),h-.04,0);}
+        const mb=new THREE.Mesh(new THREE.SphereGeometry(.07,12,8),hexm(0xE3BC8A));mb.position.set(0,1.1,0);g.add(mb);LB(g,.004,.4,.004,blk,0,1.14,0);break;}
+      if(o.day){LB(g,w,.25,d,wood,0,0,0);LB(g,w-.04,.2,d-.06,hexm(0xEFEBE4,{r:.95}),0,.25,0);LB(g,w,.75,.05,wood,0,0,-d/2+.025);LB(g,w,.75,.05,wood,0,0,d/2-.025);LB(g,.05,.75,d,wood,-w/2+.025,0,0);for(let i=0;i<3;i++)LB(g,.3,.3,.12,hexm([0xC98F5E,0x7D8B7C,0xE8E1D4][i]),-w/2+.15,.45,-d/2+.45+i*.6).rotation.z=.1;break;}
+LB(g,w,.28,d,wood,0,.0,0);LB(g,w-.08,.22,d-.12,hexm(0xF1EEE8,{r:.95}),0,.28,.04);
       LB(g,w-.04,.07,d*.62,hexm(0xE5DED2,{r:.95}),0,.48,d*.18);LB(g,w-.02,.04,.35,hexm(new THREE.Color(c).offsetHSL(0,-.1,.05).getStyle(),{r:.95}),0,.55,d/2-.4);
       for(const sx of[-1,1])LB(g,w/2-.2,.14,.35,hexm(0xF7F5F1,{r:.95}),sx*(w/4),.5,-d/2+.3);
       const hbm=o.hb==='soft'?main:wood; const hh=h; LB(g,w,hh,o.hb==='soft'?.12:.06,hbm,0,0,-d/2+.04);break;}
@@ -577,8 +614,15 @@ function build(cat,o,col){
     case 'shoe':{LB(g,w,h,d,wood,0,o.id==='tr-shoe'?.15:0,0);for(let i=1;i<3;i++)LB(g,w-.04,.006,.004,blk,0,(o.id==='tr-shoe'?.15:0)+h*i/3,d/2+.002);if(o.id==='tr-shoe')LB(g,w-.04,.015,.03,M.glow,0,.13,d/2-.05);break;}
     case 'shelf':{for(const sx of[-1,1])for(const sz of[-1,1])LB(g,.03,h,.03,main,sx*(w/2-.015),0,sz*(d/2-.015));for(let i=0;i<5;i++)LB(g,w,.02,d,main,0,.1+i*(h-.15)/4,0);
       [[0xC9A066,.3,.25],[0x5B6B7A,.4,.3],[0x8A2E2E,.25,.2],[0x2F4F4F,.35,.22]].forEach(([cc,bw,bh],i)=>LB(g,bw,bh,d*.7,hexm(cc),-w/2+.2+i%2*.4,.12+Math.floor(i/2)*(h-.15)/4,0));break;}
-    case 'book':{const n=o.id==='kallax'?2:Math.round(w/0.4);LB(g,w,h,d,wood,0,0,0);const rows=o.id==='kallax'?4:5;for(let r=0;r<rows;r++)for(let i=0;i<n;i++){const cw=w/n-.04,ch=h/rows-.04;const bx=-w/2+w*(i+.5)/n,by=.02+r*h/rows;LB(g,cw,ch,.02,hexm(new THREE.Color(c).offsetHSL(0,0,-.08).getStyle()),bx,by,d/2-.01).position.z=d/2-.18;
-      const k=(r*7+i*3)%5;if(k<3)for(let b=0;b<5;b++)LB(g,.04,ch*(.6+((b+k)%3)*.12),.2,hexm([0x8C5E36,0x4E6B66,0xD9CFC0,0x2E2E2E,0xB5653F][(b+k)%5]),bx-cw/2+.06+b*.05,by,d/2-.12);}break;}
+    case 'book':{const n=o.id==='kallax'?2:Math.round(w/0.8);const rows=o.id==='kallax'?4:6;const t=.02;
+      LB(g,w,h,t,wood,0,0,-d/2+t/2);LB(g,t,h,d,wood,-w/2+t/2,0,0);LB(g,t,h,d,wood,w/2-t/2,0,0);
+      for(let r=0;r<=rows;r++)LB(g,w,t,d,wood,0,r*(h-t)/rows,0);for(let i=1;i<n;i++)LB(g,t,h,d,wood,-w/2+w*i/n,0,0);
+      const pal=[0x8C5E36,0x4E6B66,0xD9CFC0,0x2E2E2E,0xB5653F,0xC9A23A,0x6E7E9A];
+      for(let r=0;r<rows;r++)for(let i=0;i<n;i++){const cw=w/n-t,ch=(h-t)/rows-t;const x0=-w/2+w*i/n+t,by=r*(h-t)/rows+t;const k=(r*5+i*3)%7;
+        if(k===6){LC(g,.07,.14,hexm(0xEDE6D8),x0+cw/2,by,0);continue;}
+        if(k===5){LB(g,cw*.8,ch*.55,d*.8,hexm(0xCBBFAE,{r:1}),x0+cw/2,by,0);continue;}
+        let x=x0+.02;const cnt=Math.floor(cw/0.045)-(k%3);for(let b=0;b<cnt;b++){const bh=ch*(.62+((b*7+k)%4)*.08);LB(g,.035,bh,d*.75,hexm(pal[(b+k)%7],{r:.8}),x+.0175,by,.02);x+=.042;}}
+      break;}
     case 'outdoor':{if(o.lounge){LB(g,w,.35,.8,wood,0,0,-d/2+.4);LB(g,w,.4,.15,wood,0,.35,-d/2+.08);LB(g,.8,.35,d-.8,wood,-w/2+.4,0,.4);LB(g,w,.1,.75,hexm(0xE7E0D2,{r:1}),0,.35,-d/2+.42);LB(g,.75,.1,d-.85,hexm(0xE7E0D2,{r:1}),-w/2+.4,.35,.42);LB(g,.7,.35,.5,wood,.35,0,.5);}
       else{LB(g,w,.04,d,wood,0,h-.04,0);for(const sx of[-1,1])for(const sz of[-1,1])LB(g,.05,h-.04,.05,wood,sx*(w/2-.06),0,sz*(d/2-.06));for(const sz of[-1,1])for(const sx of[-.3,.3]){LB(g,.45,.05,.45,wood,sx*w,.44,sz*(d/2+.32));LB(g,.45,.45,.04,wood,sx*w,.49,sz*(d/2+.53));}
       LC(g,.02,2.2,blk,0,0,0);const um=new THREE.Mesh(new THREE.ConeGeometry(1.2,.35,8,1,true),hexm(0xE9E3D7,{x:{side:THREE.DoubleSide}}));um.position.set(0,2.1,0);g.add(um);}break;}
@@ -607,6 +651,7 @@ function place(id){
     if(a.axis==='x')g.position.set(a.c,y0+a.y,-a.s);else g.position.set(a.s,y0+a.y,-a.c);
   }else if(s.cat==='chair'){g=new THREE.Group();const t=sel('f2-table').o;const tl=t.w/100,td=t.d/100;const per=tl>=1.5?3:2;const ts=SLOT['f2-table'];
     for(const side of[-1,1])for(let i=0;i<per;i++){const ch=build('chair',o,col);const zz=ts.z+(i-(per-1)/2)*(tl/per);ch.position.set(ts.x+side*(td/2+.18),y0,-zz);ch.rotation.y=side<0?Math.PI/2:-Math.PI/2;g.add(ch);}
+  }else if(s.cat==='pcchair'){const ds=SLOT[s.follow];const d0=sel(s.follow).o;g=build('pcchair',o,col);g.position.set(ds.back.x+d0.d/100+.3,y0,-ds.z);g.rotation.y=-Math.PI/2;
   }else if(s.cat==='pendant'){g=build('pendant',o,col);const ts=SLOT['f2-table'];g.position.set(ts.x,y0+H[s.f]-.85,-ts.z);g.rotation.y=Math.PI/2;
   }else if(s.cat==='nightstand'){const bs=SLOT[s.follow];const b=sel(s.follow).o;o.__bedW=b.w/100;g=build('nightstand',o,col);const bd=b.d/100;
     const backX=s.back.x, sign=s.face==='-x'?-1:1;g.position.set(backX+sign*(o.d/200+.02),y0,-bs.z);g.rotation.y=faceRot(s.face);
@@ -738,13 +783,13 @@ function build3F(){
   bedroomFloor(3);
   wall(g,'z',8.06,2.8,W,y,h,[],M.plaster,.2); wall(g,'x',2.8,8.06,REAR,y,h,[],M.plaster,.2);
   wall(g,'z',REAR,0,2.8,y,h,[{a:.4,e:2.4,b:.9,t:2.4,w:1}],M.plaster,.2);
-  wall(g,'z',7.25,0,2.85,y,h,[{a:.5,e:1.3,t:2.2}]); wall(g,'x',2.85,CORE.z1,8.06,y,h,[{a:6.6,e:7.22,t:2.2}]);
+  wall(g,'z',7.25,0,2.85,y,h,[{a:1.55,e:2.35,t:2.2}]); wall(g,'x',2.85,CORE.z1,8.06,y,h,[{a:6.6,e:7.22,t:2.2}]);
   bath(g,y,2.85,CORE.z1,W,8.06,'x+');
   stairs(g,y,h,'front');
   B(g,.05,1.2,1.8,M.grille(1.8),W-.15,y+.02,1.15); strip(g,W-.2,1.1,W-.12,3.0,y+1.24);
   ceiling(3,[[0,FZ,W,CORE.z0],[0,CORE.z0,CORE.x0,CORE.z1],[0,CORE.z1,W,8.06],[0,8.06,2.8,REAR]]);
   lamp(3,3.0,2.7,2.0,2,5);lamp(3,1.4,2.6,8.6,1.8,4);
-  label(3,'臥室 A',3.1,2.0,1.6);label(3,'衛浴',.72,2.0,1.9);label(3,'走廊',1.0,2.0,4.8);label(3,'臥室 B',1.4,2.0,8.6);label(3,'衛浴',3.7,2.0,7.4);
+  label(3,'臥室 A',3.1,2.0,1.6);label(3,'衛浴',.72,2.0,1.9);label(3,'走廊',1.0,2.0,4.8);label(3,'書房臥室',1.4,2.0,8.6);label(3,'衛浴',3.7,2.0,7.4);
 }
 function build4F(){
   const g=FL[4], y=Y[4], h=H[4];
@@ -865,6 +910,8 @@ const VIEWS=[
   {n:'2F 剖切',f:2,p:[2.6,16.1,6.2],t:[2.3,3.6,-4.6]},
   {n:'3F 臥室',f:3,in:1,p:[1.75,8.5,-1.15],t:[4.4,7.6,-2.4],fov:62},
   {n:'3F 化妝台',f:3,in:1,p:[3.95,8.5,-1.15],t:[1.5,7.75,-1.85],fov:62},
+  {n:'3F 書房',f:3,in:1,p:[2.4,8.55,-7.45],t:[.5,7.7,-9.0],fov:68},
+  {n:'3F 書櫃牆',f:3,in:1,p:[1.4,8.55,-7.45],t:[2.6,7.9,-8.9],fov:68},
   {n:'3F 床上看電視',f:3,in:1,p:[4.0,8.05,-2.15],t:[1.5,7.9,-2.25],fov:62},
   {n:'3F 剖切',f:3,p:[2.6,19.4,6.2],t:[2.3,6.9,-4.6]},
   {n:'4F 主臥',f:4,in:1,p:[1.7,11.85,-1.1],t:[4.5,10.95,-2.3],fov:62},
