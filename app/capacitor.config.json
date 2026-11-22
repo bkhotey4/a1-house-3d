@@ -1,0 +1,8 @@
+{
+  "appId": "io.github.bkhotey4.a1house",
+  "appName": "A1 透天 3D",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#141412"
+  }
+}

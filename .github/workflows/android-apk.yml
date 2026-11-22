@@ -1,0 +1,63 @@
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-apk
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: 安裝套件
+        run: npm install --no-audit --no-fund
+
+      - name: 產生 App 網頁檔（three.js 內建）
+        run: npm run build:www
+
+      - name: 建立 Android 專案
+        run: npx cap add android
+
+      - name: 產生 App 圖示與啟動畫面
+        run: npx @capacitor/assets generate --android --iconBackgroundColor '#141412' --iconBackgroundColorDark '#141412' --splashBackgroundColor '#141412' --splashBackgroundColorDark '#141412'
+
+      - name: 同步網頁到 Android
+        run: npx cap sync android
+
+      - name: 編譯 APK
+        working-directory: app/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: 整理檔名
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk A1-house-3d.apk
+
+      - name: 發佈到 Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "apk-${{ github.run_number }}" A1-house-3d.apk \
+            --repo "${{ github.repository }}" \
+            --title "A1 透天 3D App 第 ${{ github.run_number }} 版" \
+            --notes "Android 安裝檔，依 main 分支最新網頁自動產生（${GITHUB_SHA::7}）。手機下載 A1-house-3d.apk 後點開安裝，第一次需允許「安裝不明來源的應用程式」。" \
+            --latest

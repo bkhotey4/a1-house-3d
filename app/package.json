@@ -1,0 +1,18 @@
+{
+  "name": "a1-house-3d-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A1 透天 3D 家具搭配 Android App（Capacitor 包裝）",
+  "scripts": {
+    "build:www": "node build-www.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "6.2.0",
+    "@capacitor/core": "6.2.0",
+    "three": "0.160.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "3.0.5",
+    "@capacitor/cli": "6.2.0"
+  }
+}
