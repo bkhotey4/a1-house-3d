@@ -239,6 +239,7 @@ const TX={
   deck:ctex(256,256,(g,w,h)=>{for(let x=0;x<w;x+=32){const v=120+(x*7%30);g.fillStyle=`rgb(${v+20},${v-10},${v-40})`;g.fillRect(x,0,30,h);g.fillStyle='#3A2A1D';g.fillRect(x+30,0,2,h);}}),
   mc:ctex(512,512,(g,w,h)=>{g.fillStyle='#CBC6BE';g.fillRect(0,0,w,h);const r=rng(13);for(let i=0;i<60;i++){const x=r()*w,y=r()*h,rad=20+r()*90;const gr=g.createRadialGradient(x,y,0,x,y,rad);gr.addColorStop(0,`rgba(${r()<.5?150:225},${r()<.5?145:220},140,.10)`);gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(x-rad,y-rad,rad*2,rad*2);}}),
 };
+const BRICKDARK=ctex(256,128,(g,w,h)=>{g.fillStyle='#6E6A66';g.fillRect(0,0,w,h);for(let y=0;y<h;y+=16)for(let x=((y/16)%2)*24-24;x<w;x+=48){g.fillStyle=`rgb(${104+(x*y)%10},${100+(x*y)%10},${96+(x*y)%10})`;g.fillRect(x+1,y+1,46,14);}});
 const FLOORS=[], GRILLES=[];
 function tiled(t,tile,w,d,o={}){const c=t.clone();c.needsUpdate=true;c.repeat.set(w/tile,d/tile);const m=mat(o.color??0xffffff,{r:o.r??0.75,x:{map:c}});if(t===TX.oak)FLOORS.push({m,w,d});return m;}
 const M={
@@ -680,7 +681,7 @@ function build1F(){
   floorRect(g,3.4,CORE.z1,W,8.55,y,tiled(TX.tileDark,.6,1.2,1.97));
   // 牆
   wall(g,'x',0,0,5.1,y,h,[],M.mc,.2); wall(g,'x',0,5.1,REAR,y,h,[],M.plaster,.2);
-  wall(g,'x',W,0,5.1,y,h,[{a:2.3,e:3.3,b:1.1,t:2.4,w:1}],M.mc,.2); wall(g,'x',W,5.1,8.55,y,h,[{a:7.3,e:7.95,b:1.4,t:2.3,w:1}],M.plaster,.2);
+  wall(g,'x',W,0,5.1,y,h,[{a:1.9,e:2.45,b:1.2,t:2.7,w:1},{a:3.0,e:3.55,b:1.2,t:2.7,w:1}],M.mc,.2); wall(g,'x',W,5.1,8.55,y,h,[{a:7.3,e:7.95,b:1.4,t:2.3,w:1}],M.plaster,.2);
   wall(g,'z',8.55,3.4,W,y,h,[],M.plaster,.2); wall(g,'x',2.8,8.55,REAR,y,h,[],M.plaster,.2);
   wall(g,'z',REAR,0,2.8,y,h,[{a:.25,e:2.55,b:.35,t:2.9,w:1}],M.plaster,.2);
   wall(g,'x',3.4,CORE.z1,8.55,y,h,[{a:6.65,e:7.3,t:2.2}]);
@@ -693,11 +694,20 @@ function build1F(){
   B(g,CORE.x0,.03,.06,M.glow,0,y+h-.08,4.96);
   // 樓梯下收納櫃（車庫側）
   B(g,CORE.x1-CORE.x0,1.75,.04,M.greige,CORE.x0,y,CORE.z0-.04);
+  { const soffit=ctex(512,384,(c,w,hh)=>{c.fillStyle='#CFC7BC';c.fillRect(0,0,w,hh);for(let yy=0;yy<hh;yy+=18)for(let xx=((yy/18)%2)*30-30;xx<w;xx+=60){c.fillStyle='#BDB4A8';c.fillRect(xx,yy,58,1);c.fillRect(xx,yy,1,18);}
+      const st=(x0,y0,x1,y1,x2,y2,x3,y3)=>{c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.lineTo(x2,y2);c.lineTo(x3,y3);c.closePath();c.fillStyle='#A9A7A2';c.fill();const r=rng(31);for(let i=0;i<2200;i++){c.fillStyle=r()<.5?'rgba(70,70,70,.35)':'rgba(240,240,240,.45)';c.fillRect(r()*w,r()*hh,2,2);}};
+      st(0,0,w,0,w,hh*.32,0,hh*.32); c.save(); c.beginPath(); c.moveTo(w*.18,hh*.32); c.lineTo(w,hh*.32); c.lineTo(w,hh*.98); c.lineTo(w*.82,hh*.98); c.closePath(); c.clip(); st(0,0,w,0,w,hh,0,hh); c.restore();
+      c.save(); c.beginPath(); c.rect(0,0,w,hh); c.rect(0,hh*.32,w,hh*.68); c.restore(); });
+    const sm=reg(new THREE.MeshStandardMaterial({map:soffit,roughness:.9}));
+    B(g,CORE.x1-CORE.x0,h-1.75,.05,sm,CORE.x0,y+1.75,CORE.z0-.06);                 // 樓梯下方洗石子斜板（車庫看過去）
+    B(g,W,.5,.45,reg(new THREE.MeshStandardMaterial({color:0xA9A7A2,roughness:.95})),0,y+h-.5,CORE.z0-.45); } // 車庫天花洗石子大樑
   for(let i=1;i<4;i++)B(g,.006,1.7,.01,M.black,CORE.x0+(CORE.x1-CORE.x0)*i/4,y+.03,CORE.z0-.05);
   B(g,CORE.x1-CORE.x0,.02,.03,M.glow,CORE.x0,y+1.77,CORE.z0-.05);
   stairs(g,y,h,'rear');
   // 鐵捲門上蓋
-  B(g,W,.6,.35,M.black,0,y+h-.6,-.05);
+  { const bandM=reg(new THREE.MeshStandardMaterial({map:(()=>{const t=BRICKDARK.clone();t.needsUpdate=true;t.repeat.set(4,1.2);return t;})(),roughness:.85}));
+    B(g,W,1.2,.16,bandM,0,y+2.85,-.1); B(g,W,.05,.3,M.black,0,y+2.8,-.1);          // 2F 陽台下方灰色磚牆帶
+    B(g,.36,.07,.12,M.black,1.2,y+3.35,-.22); B(g,.3,.012,.08,M.glow,1.23,y+3.34,-.2); } // 壁燈
   // 線性燈
   for(const x of[1.15,2.3,3.45])strip(g,x-.02,.3,x+.02,4.1,y+h);
   // 汽機車
@@ -705,7 +715,7 @@ function build1F(){
   // 安全帽層架
   for(const yy of[1.35,1.75])B(g,.3,.03,.9,M.black,W-.42,y+yy,.35);
   // 前院植栽
-  const p=(x,z,hh)=>{const gg=build('plant',{id:'olive',w:50,d:50,h:hh*100},{hex:'#3A3936'});gg.position.set(x,y,-z);g.add(gg);};p(.3,.25,1.4);p(W-.3,.25,1.4);
+  const p=(x,z,hh)=>{const gg=build('plant',{id:'olive',w:50,d:50,h:hh*100},{hex:'#3A3936'});gg.position.set(x,y,-z);g.add(gg);};
   // 衛浴
   bath(g,y,3.4,CORE.z1,W,8.55,'x+');
   // 後院
@@ -737,7 +747,7 @@ function build2F(){
   const g=FL[2], y=Y[2], h=H[2]; upperShell(2);
   for(const [x0,z0,x1,z1] of [[0,FZ,W,CORE.z0],[0,CORE.z0,CORE.x0,CORE.z1],[0,CORE.z1,3.4,8.06],[3.4,CORE.z1,W,7.0],[0,8.06,2.8,REAR]])floorRect(g,x0,z0,x1,z1,y,tiled(TX.oak,1.2,x1-x0,z1-z0));
   wall(g,'x',0,FZ,REAR,y,h,[],M.plaster,.2);
-  wall(g,'x',W,FZ,8.06,y,h,[{a:3.3,e:4.1,b:.95,t:2.4,w:1},{a:7.35,e:7.85,b:1.4,t:2.2,w:1}],M.plaster,.2);
+  wall(g,'x',W,FZ,8.06,y,h,[{a:1.9,e:2.4,b:.95,t:2.5,w:1},{a:3.0,e:3.5,b:.95,t:2.5,w:1},{a:7.35,e:7.85,b:1.4,t:2.2,w:1}],M.plaster,.2);
   wall(g,'z',FZ,0,W,y,h,[{a:.5,e:4.1,b:0,t:2.75,w:1}],M.plaster,.2);
   wall(g,'z',8.06,2.8,W,y,h,[],M.plaster,.2); wall(g,'x',2.8,8.06,REAR,y,h,[],M.plaster,.2);
   wall(g,'z',REAR,0,2.8,y,h,[{a:1.55,e:2.6,b:1.15,t:2.35,w:1}],M.plaster,.2);
@@ -840,7 +850,13 @@ function croton(x,z){ // 側巷花崗石花槽＋變葉木
   for(let i=0;i<9;i++){const s=new THREE.Mesh(new THREE.IcosahedronGeometry(.16,0),new THREE.MeshStandardMaterial({color:cols[i%5],roughness:.7,flatShading:true}));s.position.set(x+Math.cos(i*2.1)*.18,.62+Math.sin(i*1.3)*.15+(i%3)*.08,-(z+Math.sin(i*2.1)*.32));s.castShadow=true;CTX.add(s);}
 }
 // 外牆二丁掛（側巷面）、灰色石材壁柱、白色框架
-CB(.04,Y[5],REAR,exMat(brickTex,[8,24]),W+.1,0,0);
+{ const holes=[[1.9,2.45,1.2,2.7],[3.0,3.55,1.2,2.7],[7.3,7.95,1.4,2.3],[1.9,2.4,Y[2]+.95,Y[2]+2.5],[3.0,3.5,Y[2]+.95,Y[2]+2.5],[7.35,7.85,Y[2]+1.4,Y[2]+2.2],[7.35,7.85,Y[3]+1.4,Y[3]+2.2]];
+  const sh=new THREE.Shape([new THREE.Vector2(0,0),new THREE.Vector2(REAR,0),new THREE.Vector2(REAR,Y[5]),new THREE.Vector2(0,Y[5])]);
+  for(const [a,e,b,t] of holes){const hp=new THREE.Path();hp.moveTo(a,b);hp.lineTo(e,b);hp.lineTo(e,t);hp.lineTo(a,t);hp.lineTo(a,b);sh.holes.push(hp);}
+  const bt=brickTex.clone();bt.needsUpdate=true;bt.repeat.set(1/1.23,1/.56);
+  const clad=new THREE.Mesh(new THREE.ShapeGeometry(sh),new THREE.MeshStandardMaterial({map:bt,roughness:.9}));
+  clad.rotation.y=Math.PI/2; clad.position.set(W+.11,0,0); clad.receiveShadow=true; TG.add(clad);
+  for(const [a,e,b,t] of holes){CB(.08,.04,e-a+.06,new THREE.MeshStandardMaterial({color:0x8E8B87,roughness:.85}),W+.08,b-.04,a-.03);} } // 窗台
 CB(.04,Y[5],REAR,exMat(brickTex,[8,24]),-.14,Y[1],0).visible=false;
 const stoneM=new THREE.MeshStandardMaterial({color:0x8E8B87,roughness:.85});
 CB(.32,Y[5]+.9,.25,stoneM,-.16,0,-.2); CB(.32,Y[5]+.9,.25,stoneM,W-.16,0,-.2);
@@ -883,8 +899,15 @@ function hoodVent(x,y){
 }
 hoodVent(.85,Y[2]+2.25);
 
+// 右側壁柱上的黑色信箱面板
+CB(.34,2.5,.05,new THREE.MeshStandardMaterial({color:0x2A2A2A,roughness:.5}),W-.17,.05,-.27);
+for(const yy of[1.15,1.55])CB(.12,.12,.02,new THREE.MeshStandardMaterial({color:0x111111}),W-.06,yy,-.29);
+// 車庫左前方花崗石花槽＋龍柏
+{ const gr=new THREE.MeshStandardMaterial({color:0xB4B2AE,roughness:.95}); CB(1.1,.55,.5,gr,-.75,0,-1.45);
+  const cy=new THREE.MeshStandardMaterial({color:0x3F6B35,roughness:.8,flatShading:true});
+  for(const [cx,hh] of [[-.45,2.4],[.05,2.1]]){for(let k=0;k<4;k++){const cone=new THREE.Mesh(new THREE.ConeGeometry(.42-k*.08,hh/3,8),cy);cone.position.set(cx,.55+hh*(.18+k*.2),1.2);cone.castShadow=true;TG.add(cone);}} }
 // 1F 側窗灰色格柵
-for(const z0 of[2.3,7.3]){const L=z0<5?1.0:.65;for(let i=0;i<5;i++)CB(.04,1.3,.03,new THREE.MeshStandardMaterial({color:0x6E6B67}),W+.13,1.1,z0+i*L/4);for(let j=0;j<6;j++)CB(.04,.03,L,new THREE.MeshStandardMaterial({color:0x6E6B67}),W+.13,1.1+j*.26,z0);}
+for(const z0 of[1.85,2.95,7.3]){const L=z0<5?.65:.65;for(let i=0;i<5;i++)CB(.04,1.3,.03,new THREE.MeshStandardMaterial({color:0x6E6B67}),W+.13,1.1,z0+i*L/4);for(let j=0;j<6;j++)CB(.04,.03,L,new THREE.MeshStandardMaterial({color:0x6E6B67}),W+.13,1.1+j*.26,z0);}
 // 頂樓鐵皮屋頂
 const tin=ctex(128,128,(g,w,h)=>{for(let x=0;x<w;x+=16){const gr=g.createLinearGradient(x,0,x+16,0);gr.addColorStop(0,'#C9CCCF');gr.addColorStop(.5,'#EEF0F1');gr.addColorStop(1,'#A9ADB1');g.fillStyle=gr;g.fillRect(x,0,16,h);}});
 const tinM=new THREE.MeshStandardMaterial({map:(()=>{const c=tin.clone();c.needsUpdate=true;c.repeat.set(10,1);return c;})(),roughness:.35,metalness:.7,side:THREE.DoubleSide});
