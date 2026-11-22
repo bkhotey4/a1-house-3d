@@ -285,6 +285,29 @@ const NIGHT=[];
 function lamp(f,x,y,z,i=2.2,dist=5){const l=new THREE.PointLight(0xFFC98A,0,dist,2);l.position.set(x,y,-z);l.userData.i=i;FL[f].add(l);NIGHT.push(l);}
 
 /* ---------- 樓梯（雙跑，平台在前或在後） ---------- */
+/* ---------- 三折樓梯（依毛胚影片：兩側牆夾梯，前端兩個轉角平台＋中間短跑） ---------- */
+const WASHED=ctex(256,256,(g,w,h)=>{g.fillStyle='#A9A7A2';g.fillRect(0,0,w,h);const r=rng(41);for(let i=0;i<3800;i++){const v=r();g.fillStyle=v<.45?'rgba(60,60,60,.5)':v<.9?'rgba(235,235,235,.6)':'rgba(140,120,100,.5)';g.fillRect(r()*w,r()*h,2+r()*2,2+r()*2);}});
+function stairs3(g,y0,h,walls={}){
+  const N=Math.round(h/.175), r=h/N, A=[3.6,4.57], C=[2.17,3.14], zR=CORE.z1, zF=CORE.z0, L=1.0, nB=2;
+  const nA=Math.floor((N-2-nB)/2), nC=N-2-nB-nA;
+  const wm=reg(new THREE.MeshStandardMaterial({map:WASHED,roughness:.9}));
+  const tread=reg(new THREE.MeshStandardMaterial({color:0x3C3D3F,roughness:.45}));
+  let k=0;
+  const step=(x0,x1,z0,z1)=>{const t=y0+(++k)*r;B(g,x1-x0,t-y0-.03,z1-z0,wm,x0,y0,z0);B(g,x1-x0,.03,z1-z0,tread,x0,t-.03,z0);};
+  let len=(zR-(zF+L))/nA; for(let i=0;i<nA;i++)step(A[0],A[1],zR-(i+1)*len,zR-i*len);     // 第一跑：後端右側往前上
+  step(A[0],A[1],zF,zF+L);                                                               // 前右轉角平台
+  len=(A[0]-C[1])/nB; for(let i=0;i<nB;i++)step(A[0]-(i+1)*len,A[0]-i*len,zF,zF+L);     // 中間短跑：往左上
+  step(C[0],C[1],zF,zF+L);                                                               // 前左轉角平台
+  len=(zR-(zF+L))/nC; for(let i=0;i<nC;i++)step(C[0],C[1],zF+L+i*len,zF+L+(i+1)*len);  // 第三跑：往後上，抵達上層後端左側
+  B(g,C[1]-C[0]+.4,.01,.02,M.glow,C[0],y0,zR-.02).visible=false;
+  // 牆夾梯：中間隔牆＋外側牆（白牆）
+  B(g,A[0]-C[1],h,zR-(zF+L),M.plaster,C[1],y0,zF+L);
+  B(g,.12,h,zR-zF,M.plaster,CORE.x0-.06,y0,zF);
+  if(walls.front)B(g,CORE.x1-CORE.x0,h,.12,M.plaster,CORE.x0,y0,zF-.06); else B(g,CORE.x1-CORE.x0,h,.02,M.plaster,CORE.x0,y0,zF+.005);
+  // 牆上扶手
+  for(const [x,zz0,zz1,yy0,yy1] of [[A[1]-.02,zR,zF+L,y0+.9,y0+.9+nA*r],[C[0]+.02,zF+L,zR,y0+.9+(nA+2+nB)*r,y0+.9+h-(r)]]){
+    const p1=new THREE.Vector3(x,yy0,-zz0),p2=new THREE.Vector3(x,yy1,-zz1);const rod=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,p1.distanceTo(p2),10),M.walnut);rod.position.copy(p1).lerp(p2,.5);rod.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),p2.clone().sub(p1).normalize());g.add(rod);}
+}
 function stairs(g,y0,h,mode){
   const n=9, r=h/2/n, L1=CORE.z0+.7, L2=CORE.z1-.7;
   const tread=(x0,x1,zA,zB,base,top)=>{B(g,x1-x0,top-base,Math.abs(zB-zA),M.stone,x0,base,Math.min(zA,zB));B(g,x1-x0,.035,Math.abs(zB-zA)+.02,M.walnut,x0,top-.035,Math.min(zA,zB)-.01);};
@@ -678,13 +701,13 @@ function build1F(){
   floorRect(g,0,0,W,5.1,y,tiled(TX.garage,.6,W,5.1));
   floorRect(g,0,5.1,CORE.x0,7.35,y,tiled(TX.tile,.8,2.14,2.25)); floorRect(g,CORE.x0,CORE.z1,3.4,7.35,y,tiled(TX.tile,.8,1.26,.77));
   floorRect(g,0,7.35,3.4,8.55,y,tiled(TX.oak,1.2,3.4,1.2)); floorRect(g,0,8.55,2.8,REAR,y,tiled(TX.oak,1.2,2.8,1.32));
-  floorRect(g,3.4,CORE.z1,W,8.55,y,tiled(TX.tileDark,.6,1.2,1.97));
+  floorRect(g,3.4,CORE.z1,W,7.0,y,tiled(TX.tile,.8,1.2,.42)); floorRect(g,3.4,7.0,W,8.55,y,tiled(TX.tileDark,.6,1.2,1.55));
   // 牆
   wall(g,'x',0,0,5.1,y,h,[],M.mc,.2); wall(g,'x',0,5.1,REAR,y,h,[],M.plaster,.2);
   wall(g,'x',W,0,5.1,y,h,[{a:1.9,e:2.45,b:1.2,t:2.7,w:1},{a:3.0,e:3.55,b:1.2,t:2.7,w:1}],M.mc,.2); wall(g,'x',W,5.1,8.55,y,h,[{a:7.3,e:7.95,b:1.4,t:2.3,w:1}],M.plaster,.2);
   wall(g,'z',8.55,3.4,W,y,h,[],M.plaster,.2); wall(g,'x',2.8,8.55,REAR,y,h,[],M.plaster,.2);
   wall(g,'z',REAR,0,2.8,y,h,[{a:.25,e:2.55,b:.35,t:2.9,w:1}],M.plaster,.2);
-  wall(g,'x',3.4,CORE.z1,8.55,y,h,[{a:6.65,e:7.3,t:2.2}]);
+  wall(g,'x',3.4,7.0,8.55,y,h,[]); wall(g,'z',7.0,3.4,W,y,h,[{a:3.5,e:4.2,t:2.2}]);
   wall(g,'z',7.35,0,3.4,y,h,[{a:1.55,e:2.35,t:2.2}]);
   // 車庫後牆：胡桃木格柵＋隱藏門＋穿鞋椅
   wall(g,'z',5.1,0,CORE.x0,y,h,[],M.plaster,.16);
@@ -703,7 +726,7 @@ function build1F(){
     B(g,W,.5,.45,reg(new THREE.MeshStandardMaterial({color:0xA9A7A2,roughness:.95})),0,y+h-.5,CORE.z0-.45); } // 車庫天花洗石子大樑
   for(let i=1;i<4;i++)B(g,.006,1.7,.01,M.black,CORE.x0+(CORE.x1-CORE.x0)*i/4,y+.03,CORE.z0-.05);
   B(g,CORE.x1-CORE.x0,.02,.03,M.glow,CORE.x0,y+1.77,CORE.z0-.05);
-  stairs(g,y,h,'rear');
+  stairs3(g,y,h);
   // 鐵捲門上蓋
   { const bandM=reg(new THREE.MeshStandardMaterial({map:(()=>{const t=BRICKDARK.clone();t.needsUpdate=true;t.repeat.set(4,1.2);return t;})(),roughness:.85}));
     B(g,W,1.2,.16,bandM,0,y+2.85,-.1); B(g,W,.05,.3,M.black,0,y+2.8,-.1);          // 2F 陽台下方灰色磚牆帶
@@ -717,7 +740,7 @@ function build1F(){
   // 前院植栽
   const p=(x,z,hh)=>{const gg=build('plant',{id:'olive',w:50,d:50,h:hh*100},{hex:'#3A3936'});gg.position.set(x,y,-z);g.add(gg);};
   // 衛浴
-  bath(g,y,3.4,CORE.z1,W,8.55,'x+');
+  bath(g,y,3.4,7.0,W,8.55,'x+');
   // 後院
   floorRect(g,0,REAR,2.8,11.6,y,tiled(TX.deck,1,2.8,1.73)); floorRect(g,2.8,8.55,W,13.2,y,M.gravel); floorRect(g,0,11.6,2.8,12.6,y,M.grass);
   floorRect(g,0,12.6,W,13.2,y,M.soil);
@@ -753,7 +776,7 @@ function build2F(){
   wall(g,'z',REAR,0,2.8,y,h,[{a:1.55,e:2.6,b:1.15,t:2.35,w:1}],M.plaster,.2);
   wall(g,'z',7.0,3.4,W,y,h,[{a:3.5,e:4.2,t:2.2}]); wall(g,'x',3.4,7.0,8.06,y,h,[]);
   bath(g,y,3.4,7.0,W,8.06,'x+');
-  stairs(g,y,h,'front');
+  stairs3(g,y,h,{front:true});
   // 85 吋電視牆：胡桃木格柵（鄰棟實牆）
   B(g,.05,h,3.3,M.grille(3.3),.1,y,FZ+.05);
   const tv=new THREE.Group();
@@ -958,6 +981,8 @@ function showFloor(f,{inside=false}={}){
 const VIEWS=[
   {n:'外觀',f:'all',p:[5.2,6.5,12.5],t:[2.2,7.6,-2.5],fov:55},
   {n:'後側外觀',f:'all',p:[8.5,12.5,-19.5],t:[2.2,8.2,-9.0],fov:45},
+  {n:'1F 樓梯',f:1,in:1,p:[4.08,1.6,-6.95],t:[4.08,2.3,-4.6],fov:75},
+  {n:'2F 樓梯',f:2,in:1,p:[4.08,5.2,-6.95],t:[4.08,5.9,-4.6],fov:75},
   {n:'1F 剖切',f:1,p:[2.6,12.5,6.2],t:[2.3,0.0,-4.6]},
   {n:'車庫玄關',f:1,in:1,p:[3.2,1.75,4.6],t:[1.7,1.25,-4.2],fov:52},
   {n:'孝親房',f:1,in:1,p:[3.15,1.7,-7.5],t:[.5,.85,-9.2],fov:66},
